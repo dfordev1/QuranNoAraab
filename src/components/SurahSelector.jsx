@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { useTheme } from '../context/ThemeContext';
 
 /**
  * Floating hamburger menu for Surah selection
@@ -10,6 +11,7 @@ const SurahSelector = ({ surahNames, currentSurah, onSurahSelect, className }) =
   const [filteredSurahs, setFilteredSurahs] = useState(surahNames);
   const selectorRef = useRef(null);
   const searchInputRef = useRef(null);
+  const { isDarkMode } = useTheme();
 
   // Apply search filter to surahs
   useEffect(() => {
@@ -92,210 +94,133 @@ const SurahSelector = ({ surahNames, currentSurah, onSurahSelect, className }) =
   ];
 
   return (
-    <div className={`fixed bottom-4 right-4 z-50 ${className}`} ref={selectorRef}>
-      {/* Hamburger button */}
+    <div className={`relative ${className}`} ref={selectorRef}>
       <button
-        className="bg-emerald-600 text-white p-3 rounded-full shadow-lg hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500"
         onClick={toggleMenu}
-        aria-label="Toggle Surah menu"
+        className={`w-full p-4 rounded-lg shadow-md transition-colors duration-200 ${
+          isDarkMode 
+            ? 'bg-gray-800 hover:bg-gray-700 text-white' 
+            : 'bg-white hover:bg-gray-50 text-gray-900'
+        }`}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          {isOpen ? (
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          ) : (
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          )}
-        </svg>
+        <div className="flex items-center justify-between">
+          <span className="text-lg font-semibold">Select Surah</span>
+          <svg
+            className={`w-5 h-5 transform transition-transform ${isOpen ? 'rotate-180' : ''}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
       </button>
 
-      {/* Surah selection menu */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl h-[90vh] flex flex-col overflow-hidden">
-            {/* Header */}
-            <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-emerald-50">
-              <h2 className="text-xl font-bold text-emerald-800">Select Surah</h2>
-              <button
-                onClick={toggleMenu}
-                className="p-2 hover:bg-emerald-100 rounded-full transition-colors"
-                aria-label="Close menu"
+        <div className={`absolute z-50 w-full mt-2 rounded-lg shadow-lg transition-colors duration-200 ${
+          isDarkMode 
+            ? 'bg-gray-800 text-white' 
+            : 'bg-white text-gray-900'
+        }`}>
+          <div className="sticky top-0 p-4 border-b border-gray-200 dark:border-gray-700">
+            <div className="relative">
+              <input
+                ref={searchInputRef}
+                type="text"
+                placeholder="Search surah..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className={`w-full pl-10 pr-4 py-2 rounded-lg border transition-colors duration-200 ${
+                  isDarkMode 
+                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                    : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                }`}
+              />
+              <svg
+                className={`absolute left-3 top-2.5 h-5 w-5 ${
+                  isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-emerald-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
             </div>
+          </div>
 
-            {/* Search */}
-            <div className="p-4 border-b border-gray-200 bg-white sticky top-0 z-10">
-              <div className="relative">
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-lg"
-                  placeholder="Search surah by name or number..."
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+          <div className="max-h-[60vh] overflow-y-auto">
+            {searchQuery ? (
+              <div className="p-2">
+                {filteredSurahs.map((surah) => (
+                  <button
+                    key={surah.number}
+                    onClick={() => {
+                      handleSurahSelect(surah.number);
+                      setIsOpen(false);
+                    }}
+                    className={`w-full p-3 text-left rounded-lg transition-colors duration-200 ${
+                      isDarkMode 
+                        ? 'hover:bg-gray-700' 
+                        : 'hover:bg-gray-100'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className={`w-8 h-8 flex items-center justify-center rounded-full ${
+                        isDarkMode 
+                          ? 'bg-gray-700 text-white' 
+                          : 'bg-gray-100 text-gray-900'
+                      }`}>
+                        {surah.number}
+                      </span>
+                      <div>
+                        <div className="font-medium">{surah.englishName}</div>
+                        <div className="text-sm opacity-75">{surah.englishNameTranslation}</div>
+                      </div>
+                    </div>
+                  </button>
+                ))}
               </div>
-            </div>
-
-            {/* Main content area */}
-            <div className="flex-1 overflow-y-auto">
-              {/* Quick navigation section */}
-              {!searchQuery && (
-                <div className="p-4 bg-gray-50 space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {/* Numbered grid 1-10 */}
-                    <div className="bg-white p-4 rounded-xl shadow-sm">
-                      <h3 className="text-sm font-semibold text-emerald-800 mb-3">Surahs 1-10</h3>
-                      <div className="grid grid-cols-5 gap-2">
-                        {Array.from({ length: 10 }, (_, i) => i + 1).map(num => (
-                          <button
-                            key={num}
-                            onClick={() => handleSurahSelect(num)}
-                            className={`p-2 text-sm rounded-lg transition-colors ${
-                              currentSurah === num
-                                ? 'bg-emerald-500 text-white'
-                                : 'bg-gray-50 hover:bg-emerald-50 text-gray-700'
-                            }`}
-                          >
-                            {num}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Most read surahs */}
-                    <div className="bg-white p-4 rounded-xl shadow-sm">
-                      <h3 className="text-sm font-semibold text-emerald-800 mb-3">Most Read</h3>
-                      <div className="space-y-2">
-                        {[1, 36, 67, 18].map(num => {
-                          const surah = surahNames.find(s => s.number === num);
-                          return surah && (
-                            <button
-                              key={num}
-                              onClick={() => handleSurahSelect(num)}
-                              className={`w-full p-2 text-left rounded-lg transition-colors ${
-                                currentSurah === num
-                                  ? 'bg-emerald-500 text-white'
-                                  : 'bg-gray-50 hover:bg-emerald-50 text-gray-700'
-                              }`}
-                            >
-                              <span className="font-medium">{surah.englishName}</span>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    {/* Last surahs */}
-                    <div className="bg-white p-4 rounded-xl shadow-sm">
-                      <h3 className="text-sm font-semibold text-emerald-800 mb-3">Last Surahs</h3>
-                      <div className="space-y-2">
-                        {[112, 113, 114].map(num => {
-                          const surah = surahNames.find(s => s.number === num);
-                          return surah && (
-                            <button
-                              key={num}
-                              onClick={() => handleSurahSelect(num)}
-                              className={`w-full p-2 text-left rounded-lg transition-colors ${
-                                currentSurah === num
-                                  ? 'bg-emerald-500 text-white'
-                                  : 'bg-gray-50 hover:bg-emerald-50 text-gray-700'
-                              }`}
-                            >
-                              <span className="font-medium">{surah.englishName}</span>
-                            </button>
-                          );
-                        })}
-                      </div>
+            ) : (
+              <div className="p-2">
+                {groupedSurahs.map((group) => (
+                  <div key={group.name} className="mb-4">
+                    <h3 className={`px-3 py-2 text-sm font-semibold ${
+                      isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                    }`}>
+                      {group.name}
+                    </h3>
+                    <div className="grid grid-cols-2 gap-2">
+                      {group.surahs.map((surah) => (
+                        <button
+                          key={surah.num}
+                          onClick={() => {
+                            handleSurahSelect(surah.num);
+                            setIsOpen(false);
+                          }}
+                          className={`p-3 text-left rounded-lg transition-colors duration-200 ${
+                            isDarkMode 
+                              ? 'hover:bg-gray-700' 
+                              : 'hover:bg-gray-100'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className={`w-6 h-6 flex items-center justify-center rounded-full text-sm ${
+                              isDarkMode 
+                                ? 'bg-gray-700 text-white' 
+                                : 'bg-gray-100 text-gray-900'
+                            }`}>
+                              {surah.num}
+                            </span>
+                            <span className="font-medium">{surah.name}</span>
+                          </div>
+                        </button>
+                      ))}
                     </div>
                   </div>
-                </div>
-              )}
-
-              {/* Full surah list */}
-              <div className="bg-white">
-                <ul className="divide-y divide-gray-100">
-                  {filteredSurahs.map((surah) => (
-                    <li key={surah.number}>
-                      <button
-                        className={`w-full p-4 hover:bg-gray-50 transition-colors ${
-                          currentSurah === surah.number ? 'bg-emerald-50' : ''
-                        }`}
-                        onClick={() => handleSurahSelect(surah.number)}
-                      >
-                        <div className="flex items-center gap-4">
-                          <span className="flex-none w-8 h-8 flex items-center justify-center rounded-full bg-emerald-100 text-emerald-800 font-semibold">
-                            {surah.number}
-                          </span>
-                          <div className="flex-1 text-left">
-                            <div className="flex items-center justify-between">
-                              <span className="font-medium text-gray-900">{surah.englishName}</span>
-                              <span className="font-arabic text-xl text-gray-800">{surah.name}</span>
-                            </div>
-                            <span className="text-sm text-gray-500">{surah.englishNameTranslation}</span>
-                          </div>
-                        </div>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
+                ))}
               </div>
-
-              {/* No results message */}
-              {filteredSurahs.length === 0 && (
-                <div className="p-8 text-center text-gray-500">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-12 w-12 mx-auto mb-4 text-gray-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    />
-                  </svg>
-                  <p className="text-lg">No surahs found matching "{searchQuery}"</p>
-                </div>
-              )}
-            </div>
+            )}
           </div>
         </div>
       )}

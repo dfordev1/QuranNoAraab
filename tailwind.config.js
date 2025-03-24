@@ -4,6 +4,7 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       fontFamily: {
@@ -24,6 +25,18 @@ export default {
           '900': '#064e3b',
           '950': '#022c22',
         },
+        primary: {
+          light: '#10B981',
+          dark: '#059669',
+        },
+        background: {
+          light: '#FFFFFF',
+          dark: '#1F2937',
+        },
+        text: {
+          light: '#1F2937',
+          dark: '#F9FAFB',
+        }
       },
     },
   },
