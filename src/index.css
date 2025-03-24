@@ -1,0 +1,108 @@
+/* Import Arabic font for Quran text */
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: #f8f9fa;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Set direction for Arabic text */
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+.font-arabic {
+  font-family: 'Scheherazade New', 'Amiri', serif;
+  direction: rtl;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #047857; /* emerald-700 */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #065f46; /* emerald-800 */
+}
+
+/* Verse number circles */
+.verse-number {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: #047857; /* emerald-700 */
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* Small verse number for header */
+.verse-number-small {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background-color: #ffffff33;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* For the Bismillah at the start of surahs */
+.bismillah {
+  font-family: 'Scheherazade New', 'Amiri', serif;
+  font-size: 1.75rem;
+  text-align: center;
+  margin: 1.5rem 0;
+  color: #047857; /* emerald-700 */
+  line-height: 1.5;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #1a1a1a;
+  }
+  .bismillah {
+    color: #34d399; /* emerald-400 for dark mode */
+  }
+}
+
+/* Make sure buttons are not affected by RTL */
+button {
+  direction: ltr;
+}

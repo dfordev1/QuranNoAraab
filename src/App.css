@@ -1,0 +1,53 @@
+.quran-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ensure dark mode styles work properly */
+@media (prefers-color-scheme: dark) {
+  .quran-app {
+    background-color: #1a1a1a;
+    color: rgba(255, 255, 255, 0.87);
+  }
+
+  .bg-white {
+    background-color: #262626 !important;
+  }
+
+  .bg-gray-50 {
+    background-color: #1a1a1a !important;
+  }
+
+  .text-gray-600, .text-gray-700 {
+    color: #a1a1aa !important;
+  }
+
+  .hover\:bg-gray-100:hover {
+    background-color: #333333 !important;
+  }
+
+  .border-gray-200 {
+    border-color: #3f3f46 !important;
+  }
+
+  .bg-emerald-50 {
+    background-color: rgba(4, 120, 87, 0.1) !important;
+  }
+
+  .shadow-md, .shadow-lg, .shadow-xl {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2) !important;
+  }
+}
+
+/* Ensure smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Add some space at the bottom to allow for infinite scrolling */
+.quran-app::after {
+  content: '';
+  height: 100px;
+  width: 100%;
+}
