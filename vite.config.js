@@ -9,12 +9,17 @@ export default defineConfig({
     port: 5173
   },
   // Ensure proper base path for assets
-  base: './',
+  base: '/',
   // Optimize build
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
     sourcemap: false,
-    minify: 'esbuild'
+    minify: 'esbuild',
+    rollupOptions: {
+      output: {
+        manualChunks: undefined
+      }
+    }
   }
 })
